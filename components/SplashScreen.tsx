@@ -3,6 +3,8 @@
 import { useEffect, useLayoutEffect, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { siteConfig } from '../data/siteConfig'
+import RILogo from './RILogo'
+import BrandLockup from './BrandLockup'
 
 const SESSION_KEY = 'portfolio-splash-shown'
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect
@@ -84,9 +86,8 @@ export default function SplashScreen() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: reduceMotion ? 0.15 : 0.55, delay: reduceMotion ? 0 : 0.65 }}
             >
-              <div className="splash-monogram" aria-hidden="true">RI</div>
-              <p className="splash-name">{siteConfig.fullName}</p>
-              <p className="splash-title">{siteConfig.title}</p>
+              <div className="splash-monogram"><RILogo size="splash" /></div>
+              <BrandLockup variant="splash" includeName={false} />
             </motion.div>
 
             <motion.div

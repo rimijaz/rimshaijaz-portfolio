@@ -21,7 +21,7 @@ export default function SocialSidebar() {
               target={key === 'email' ? undefined : '_blank'}
               rel={key === 'email' ? undefined : 'noreferrer noopener'}
               aria-label={label}
-              className="inline-block text-muted transition-all hover:-translate-y-0.5 hover:text-accent"
+              className="social-link inline-flex rounded-md p-1.5 text-muted transition-all hover:-translate-y-0.5 hover:bg-accent-soft hover:text-accent hover:shadow-[0_8px_18px_rgba(var(--color-accent-rgb),0.14)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               <Icon size={20} aria-hidden />
             </a>

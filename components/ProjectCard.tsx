@@ -1,23 +1,28 @@
 'use client'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { Folder, ArrowUpRight } from 'lucide-react'
 import { FaGithub } from 'react-icons/fa'
 import type { Project } from '../data/projects'
 import ProjectImage from './ProjectImage'
 
 export default function ProjectCard({ project }: { project: Project }) {
+  const reduceMotion = useReducedMotion()
+
   return (
     <motion.div
-      whileHover={{ y: -6 }}
-      transition={{ duration: 0.2 }}
-      className="flex h-full flex-col overflow-hidden rounded-lg border border-border bg-surface transition-colors hover:border-accent/60 hover:shadow-glow"
+      initial={reduceMotion ? false : { opacity: 0, y: 22 }}
+      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-70px' }}
+      whileHover={reduceMotion ? undefined : { y: -7, rotateX: 1, rotateY: -1 }}
+      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+      className="project-secondary tilt-card flex h-full flex-col overflow-hidden rounded-2xl bg-transparent"
     >
-      <div className="aspect-[16/9] border-b border-border">
-        <ProjectImage slot={project.imageSlots[0]} />
+      <div className="project-secondary-media group aspect-[16/9] overflow-hidden rounded-xl bg-surface/70 shadow-card">
+        <ProjectImage slot={project.imageSlots[0]} className="transition-transform duration-500 ease-out group-hover:scale-[1.04]" />
       </div>
-      <div className="flex flex-1 flex-col p-6">
+      <div className="flex flex-1 flex-col px-1 pt-5">
         <div className="flex items-center justify-between">
-          <Folder className="text-accent" size={30} aria-hidden />
+          <Folder className="text-accent" size={24} aria-hidden />
           <div className="flex items-center gap-3 text-muted">
           {project.github && (
             <a

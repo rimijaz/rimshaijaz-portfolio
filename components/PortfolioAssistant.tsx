@@ -1,8 +1,8 @@
 'use client'
 
-import { FormEvent, useEffect, useRef, useState } from 'react'
+import { FormEvent, PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Bot, ExternalLink, Maximize2, MessageCircle, Minimize2, Minus, RefreshCw, Send, Sparkles, X } from 'lucide-react'
-import { useReducedMotion } from 'framer-motion'
 import { assistantQuickReplies, assistantWelcome, getAssistantResponse, type AssistantResponse } from '../data/assistant'
 
 type ChatMessage = { id: number; role: 'assistant' | 'visitor'; text?: string; response?: AssistantResponse }
@@ -28,6 +28,7 @@ export default function PortfolioAssistant() {
   const [typingResponse, setTypingResponse] = useState<AssistantResponse | null>(null)
   const [typingChars, setTypingChars] = useState(0)
   const [lastProjectSlug, setLastProjectSlug] = useState<string | undefined>()
+  const [floatingPosition, setFloatingPosition] = useState<{ left: number; top: number } | null>(null)
   const listRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const panelRef = useRef<HTMLElement>(null)
@@ -36,6 +37,8 @@ export default function PortfolioAssistant() {
   const revealTimerRef = useRef<number | null>(null)
   const generationRef = useRef(0)
   const messageIdRef = useRef(10)
+  const dragRef = useRef<{ pointerId: number; offsetX: number; offsetY: number; moved: boolean } | null>(null)
+  const draggedRef = useRef(false)
 
   const nextMessageId = () => { messageIdRef.current += 1; return messageIdRef.current }
   const cancelTyping = () => {
@@ -93,7 +96,62 @@ export default function PortfolioAssistant() {
     inputRef.current?.focus()
   }
   const submit = (event: FormEvent) => { event.preventDefault(); ask(input) }
-  const closeChat = () => { setExpanded(false); setOpen(false) }
+  const closeChat = () => { setExpanded(false); setOpen(false); setFloatingPosition(null) }
+
+  const openChat = () => { setOpen(true); setExpanded(true) }
+
+  const clampFloatingPosition = (left: number, top: number, width: number, height: number) => ({
+    left: Math.min(Math.max(8, left), Math.max(8, window.innerWidth - width - 8)),
+    top: Math.min(Math.max(8, top), Math.max(8, window.innerHeight - height - 8)),
+  })
+
+  const handleLauncherPointerDown = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return
+    const rect = event.currentTarget.getBoundingClientRect()
+    dragRef.current = {
+      pointerId: event.pointerId,
+      offsetX: event.clientX - rect.left,
+      offsetY: event.clientY - rect.top,
+      moved: false,
+    }
+    event.currentTarget.setPointerCapture(event.pointerId)
+  }
+
+  const handleLauncherPointerMove = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    const drag = dragRef.current
+    if (!drag || drag.pointerId !== event.pointerId) return
+    const distance = Math.hypot(event.clientX - (event.currentTarget.getBoundingClientRect().left + drag.offsetX), event.clientY - (event.currentTarget.getBoundingClientRect().top + drag.offsetY))
+    if (distance > 4) drag.moved = true
+    if (!drag.moved) return
+    event.preventDefault()
+    const rect = event.currentTarget.getBoundingClientRect()
+    setFloatingPosition(clampFloatingPosition(event.clientX - drag.offsetX, event.clientY - drag.offsetY, rect.width, rect.height))
+  }
+
+  const finishLauncherPointer = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    const drag = dragRef.current
+    if (!drag || drag.pointerId !== event.pointerId) return
+    draggedRef.current = drag.moved
+    dragRef.current = null
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId)
+    window.setTimeout(() => { draggedRef.current = false }, 0)
+  }
+
+  const handleLauncherClick = () => {
+    if (draggedRef.current) return
+    openChat()
+  }
+
+  useEffect(() => {
+    if (!floatingPosition) return
+    const onResize = () => {
+      const rect = launcherRef.current?.getBoundingClientRect()
+      if (!rect) return
+      setFloatingPosition((position) => position ? clampFloatingPosition(position.left, position.top, rect.width, rect.height) : position)
+    }
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [floatingPosition])
 
   useEffect(() => {
     if (!open) return
@@ -113,8 +171,9 @@ export default function PortfolioAssistant() {
 
   return <>
     {open && expanded && <button type="button" aria-label="Close expanded assistant backdrop" onClick={closeChat} className="fixed inset-0 z-40 cursor-default bg-bg/75 backdrop-blur-sm" />}
-    <div className={expanded ? 'fixed inset-0 z-50 flex items-stretch justify-center p-0 sm:items-center sm:p-6' : 'fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-4 z-50 sm:right-6'}>
-      {open && <section ref={panelRef} className={`assistant-panel-enter flex flex-col overflow-hidden border border-border bg-bg shadow-card ${expanded ? 'h-[100dvh] w-full rounded-none sm:h-[min(74dvh,680px)] sm:w-[min(750px,calc(100vw-3rem))] sm:rounded-2xl' : 'mb-3 h-[min(640px,calc(100dvh-7rem))] w-[min(410px,calc(100vw-2rem))] rounded-xl'}`} role="dialog" aria-modal={expanded} aria-label="Rimsha's Portfolio Assistant">
+    <div style={floatingPosition && !open ? { left: floatingPosition.left, top: floatingPosition.top } : undefined} className={expanded ? 'fixed inset-0 z-50 flex items-stretch justify-center p-0 sm:items-center sm:p-6' : floatingPosition && !open ? 'fixed z-50' : 'fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-4 z-50 sm:right-6'}>
+      <AnimatePresence initial={false}>
+      {open && <motion.section layoutId="portfolio-assistant-surface" ref={panelRef} transition={{ type: 'spring', stiffness: 260, damping: 28 }} className={`assistant-panel-enter flex flex-col overflow-hidden border border-border bg-bg shadow-card ${expanded ? 'h-[100dvh] w-full rounded-none sm:h-[min(74dvh,680px)] sm:w-[min(750px,calc(100vw-3rem))] sm:rounded-2xl' : 'mb-3 h-[min(640px,calc(100dvh-7rem))] w-[min(410px,calc(100vw-2rem))] rounded-xl'}`} role="dialog" aria-modal={expanded} aria-label="Rimsha's Portfolio Assistant">
         <header className="flex shrink-0 items-center justify-between border-b border-border bg-surface px-3 py-3 sm:px-4">
           <div className="flex min-w-0 items-center gap-3"><div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-accent/50 bg-accent-soft text-accent"><Bot size={18} aria-hidden /><span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-accent" /></div><div className="min-w-0"><h2 className="truncate text-sm font-semibold text-text">Rimsha&apos;s Portfolio Assistant</h2><p className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted">Local portfolio guide</p></div></div>
           <div className="flex shrink-0 items-center gap-0.5">
@@ -133,8 +192,9 @@ export default function PortfolioAssistant() {
           <div className="mb-3 flex gap-2 overflow-x-auto pb-1">{assistantQuickReplies.slice(0, 4).map((question) => <button key={question} type="button" onClick={() => ask(question)} className="shrink-0 rounded-full border border-border px-2.5 py-1.5 text-xs text-muted transition-colors hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">{question}</button>)}</div>
           <form onSubmit={submit} className="flex items-center gap-2"><label htmlFor="portfolio-assistant-input" className="sr-only">Ask the portfolio assistant</label><input ref={inputRef} id="portfolio-assistant-input" value={input} onChange={(event) => setInput(event.target.value)} placeholder="Ask about Rimsha..." className="min-w-0 flex-1 rounded-md border border-border bg-bg px-3 py-2.5 text-sm text-text outline-none placeholder:text-muted/70 focus:border-accent focus:ring-2 focus:ring-accent/30" /><button type="submit" aria-label="Send message" title="Send message" className="rounded-md bg-accent p-2.5 text-bg transition-colors hover:bg-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"><Send size={16} aria-hidden /></button></form>
         </div>
-      </section>}
-      {!open && <button ref={launcherRef} type="button" onClick={() => setOpen(true)} aria-label="Open portfolio assistant" title="Open portfolio assistant" className="group flex items-center gap-2 rounded-full border border-accent/60 bg-surface px-3 py-3 text-accent shadow-card transition-all hover:-translate-y-1 hover:bg-accent-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"><MessageCircle size={20} aria-hidden /><span className="hidden font-mono text-xs sm:inline">Ask about Rimsha</span></button>}
+      </motion.section>}
+      {!open && <motion.button layoutId="portfolio-assistant-surface" ref={launcherRef} type="button" onPointerDown={handleLauncherPointerDown} onPointerMove={handleLauncherPointerMove} onPointerUp={finishLauncherPointer} onPointerCancel={finishLauncherPointer} onClick={handleLauncherClick} aria-label="Ask About Rimsha" title="Ask About Rimsha" className="assistant-launcher group touch-none select-none"><span className="assistant-launcher-avatar"><img src="/profile_image.png" alt="" draggable="false" /></span><span className="assistant-launcher-status" aria-hidden="true" /><span className="assistant-launcher-label">Ask About Rimsha</span></motion.button>}
+      </AnimatePresence>
     </div>
   </>
 }

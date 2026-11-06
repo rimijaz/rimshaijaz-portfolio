@@ -18,11 +18,11 @@ export default function FeaturedProject({ project, index }: { project: Project; 
       className="grid items-center gap-6 md:grid-cols-12"
     >
       <div
-        className={`group relative aspect-[16/9] overflow-hidden rounded-lg border border-border bg-surface md:col-span-7 ${
+        className={`project-feature-media group relative aspect-[16/9] overflow-hidden rounded-2xl bg-surface/60 shadow-card transition-transform duration-500 hover:scale-[1.01] md:col-span-7 ${
           imageFirst ? 'md:order-1' : 'md:order-2'
         }`}
       >
-        <ProjectImage slot={project.imageSlots[0]} className="relative z-[1]" />
+        <ProjectImage slot={project.imageSlots[0]} className="relative z-[1] transition-transform duration-700 ease-out group-hover:scale-[1.035]" />
         <div className="pointer-events-none absolute -right-10 -top-10 z-[2] h-40 w-40 rounded-full bg-accent/20 blur-3xl transition-transform duration-500 group-hover:scale-125" />
         <div className="pointer-events-none absolute -bottom-12 -left-8 z-[2] h-36 w-36 rounded-full bg-accent/10 blur-3xl transition-transform duration-500 group-hover:scale-125" />
         <div className="absolute inset-0 bg-bg/0 transition-colors duration-300 group-hover:bg-bg/10" />
@@ -31,11 +31,11 @@ export default function FeaturedProject({ project, index }: { project: Project; 
       <div className={`md:col-span-5 ${imageFirst ? 'md:order-2' : 'md:order-1'}`}>
         <p className="font-mono text-sm text-accent">Selected Work</p>
         <h3 className="mt-2 text-xl font-semibold text-text sm:text-2xl">{project.name}</h3>
-        <div className="mt-3 rounded-lg border border-border bg-surface p-5 leading-relaxed text-muted">
+        <div className="project-feature-description mt-4 max-w-xl border-l-2 border-accent/45 pl-5 leading-relaxed text-muted">
           {project.description}
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs text-muted">
+        <div className="mt-5 flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs text-muted">
           {project.stack.map((tech) => (
             <span key={tech}>{tech}</span>
           ))}

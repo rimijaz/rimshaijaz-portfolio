@@ -1,9 +1,7 @@
 'use client'
 import { motion, useReducedMotion } from 'framer-motion'
 import SectionHeading from './SectionHeading'
-import { siteConfig } from '../data/siteConfig'
-
-const nowUsing = ['React', 'Next.js', 'TypeScript', 'Node.js', 'Tailwind CSS', 'Git']
+import TechnologyPills from './TechnologyPills'
 
 export default function About() {
   const reduceMotion = useReducedMotion()
@@ -12,58 +10,46 @@ export default function About() {
     <div>
       <SectionHeading number="01" title="About Me" />
 
-      <div className="grid gap-10 lg:grid-cols-[1.3fr_0.7fr] lg:items-start">
+      <div className="about-layout grid gap-8 md:grid-cols-[minmax(0,1.35fr)_minmax(15rem,0.65fr)] md:items-start md:gap-14">
         <motion.div
-          initial={reduceMotion ? false : { y: 16 }}
-          whileInView={reduceMotion ? undefined : { y: 0 }}
+          initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+          whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6 }}
-          className="space-y-5 leading-relaxed text-muted"
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+          className="about-copy space-y-5 leading-relaxed text-muted"
         >
           <p>
-            I&apos;m a Senior Software Engineer with 2.5+ years of experience shipping production web
-            applications across SaaS, ERP, productivity, and AI domains. My focus is frontend
-            engineering: turning complex product requirements into clear, responsive interfaces.
+            I&apos;m a <strong className="about-highlight">Senior Software Engineer</strong> with 2.5+ years of professional experience at AppliconSoft,
+            building and maintaining production web applications across SaaS, ERP, productivity, and AI product
+            domains. My focus is <strong className="about-highlight">Frontend Development</strong> for real client and company products.
           </p>
           <p>
-            I work primarily with React, Next.js, TypeScript, and Node.js, with a strong interest in
-            AI-assisted products and workflows. I care about reusable architecture, technical SEO,
-            accessibility, and performance because the details are what make a product feel reliable.
+            I use <strong className="about-highlight">React.js</strong>, <strong className="about-highlight">Next.js</strong>, TypeScript, and modern UI tools
+            to turn product requirements into responsive interfaces and reusable components. My work
+            also includes connecting frontend features to REST APIs and backend services.
           </p>
           <p>
-            I use tools such as Claude, Cursor, GitHub Copilot, OpenAI Codex, and ChatGPT to move
-            faster while keeping review, testing, and validation firmly in the loop.
+            I contribute to technical SEO and performance through work such as metadata, structured
+            data, canonical URLs, and responsive, efficient page experiences. AI tools including
+            Claude, Cursor, GitHub Copilot, OpenAI Codex, and ChatGPT support my workflow alongside
+            code review, testing, and validation.
           </p>
 
-          <p className="pt-2 text-sm text-muted">A few technologies I work with regularly:</p>
-          <ul className="grid max-w-sm grid-cols-2 gap-x-4 gap-y-2 font-mono text-sm text-muted">
-            {nowUsing.map((tech) => (
-              <li key={tech} className="flex items-center gap-2">
-                <span className="text-accent" aria-hidden>
-                  ▹
-                </span>
-                {tech}
-              </li>
-            ))}
-          </ul>
         </motion.div>
 
-        <motion.div
-          initial={reduceMotion ? false : { scale: 0.96 }}
-          whileInView={reduceMotion ? undefined : { scale: 1 }}
+        <motion.aside
+          initial={reduceMotion ? false : { opacity: 0, y: 16, scale: 0.98 }}
+          whileInView={reduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
           viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6 }}
-          aria-hidden
-          className="relative mx-auto aspect-square w-full max-w-xs overflow-hidden rounded-lg border border-accent/40 bg-surface"
+          transition={{ duration: 0.65, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+          className="about-rail"
         >
-          <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-accent/20 blur-3xl" />
-          <div className="absolute -bottom-12 -left-8 h-36 w-36 rounded-full bg-accent/10 blur-3xl" />
-          <div className="absolute inset-0 flex items-center justify-center font-mono text-5xl font-bold text-accent/70">
-            {'{'}
-            {siteConfig.name.charAt(0)}
-            {'}'}
+          <div className="about-rail-mark" aria-hidden="true">01</div>
+          <div className="about-rail-copy">
+            <p className="about-rail-kicker">Technologies I work with regularly</p>
+            <TechnologyPills />
           </div>
-        </motion.div>
+        </motion.aside>
       </div>
     </div>
   )

@@ -32,7 +32,7 @@ const projectImages = (slug: string, name: string, files: string[]): ProjectImag
 export const projects: Project[] = [
   {
     name: 'AsklyForm',
-    description: 'MERN stack form builder with drag-and-drop editing, live preview, MongoDB storage, and JWT/bcrypt authentication.',
+    description: 'A MERN form builder with drag-and-drop authoring and live preview. I built its form workflows and Node.js backend with MongoDB persistence and JWT/bcrypt authentication.',
     stack: ['React.js', 'Node.js', 'MongoDB', 'Material UI'],
     demo: null,
     github: null,
@@ -49,7 +49,7 @@ export const projects: Project[] = [
   },
   {
     name: 'ROI',
-    description: 'Multi-company SaaS business management platform covering CRM, customers, suppliers, appointments, invoicing, subscriptions, roles, permissions, and communication workflows.',
+    description: 'A multi-company SaaS platform for CRM and business operations, including invoicing, subscriptions, roles, permissions, and communication. My frontend work connected these workflows to REST APIs and Redux, with Stripe, DHL, and Trello integrations.',
     stack: ['React.js', 'JavaScript', 'Redux', 'REST APIs', 'Stripe'],
     demo: null,
     github: null,
@@ -66,7 +66,7 @@ export const projects: Project[] = [
   },
   {
     name: 'The Pathfinder Hub',
-    description: 'Career development platform with profiles, resume management, forms, career workflows, Stripe payments, and REST API integration.',
+    description: 'A career development platform for profiles, resume management, forms, and career workflows. I built frontend experiences and integrated REST APIs and Stripe payments.',
     stack: ['React.js', 'JavaScript', 'Stripe', 'REST APIs'],
     demo: null,
     github: null,
@@ -83,7 +83,7 @@ export const projects: Project[] = [
   },
   {
     name: 'Social Rocket AI',
-    description: 'AI-powered social media platform for content, scheduling, analytics, and business workflows, with a technical SEO foundation built for discoverability.',
+    description: 'An AI-powered social media platform for content, scheduling, analytics, and business workflows. I built responsive Next.js interfaces and implemented technical SEO across metadata, structured data, canonical URLs, sitemap, and robots.txt.',
     stack: ['Next.js', 'React.js', 'JavaScript', 'Tailwind CSS'],
     demo: null,
     github: null,
@@ -101,7 +101,7 @@ export const projects: Project[] = [
   },
   {
     name: 'TrackPilot AI',
-    description: 'Workforce productivity SaaS for time tracking, productivity monitoring, project management, and team performance.',
+    description: 'A workforce productivity SaaS for time tracking, productivity monitoring, project management, and team performance. I built responsive Next.js interfaces and improved reusable page architecture, animations, SEO, and performance.',
     stack: ['Next.js', 'React.js', 'TypeScript', 'Tailwind CSS'],
     demo: null,
     github: null,
@@ -119,9 +119,9 @@ export const projects: Project[] = [
   },
   {
     name: 'Team Suite AI',
-    description: 'Team management platform for daily status reporting, project management, task ownership, and manager visibility.',
+    description: 'A team management product for daily status reporting, task ownership, project management, and manager visibility, built with Next.js, React.js, and Tailwind CSS.',
     stack: ['Next.js', 'React.js', 'Tailwind CSS'],
-    demo: null,
+    demo: 'https://teamsuiteai.com/',
     github: null,
     featured: false,
     slug: 'team-suite-ai',
@@ -135,9 +135,9 @@ export const projects: Project[] = [
   },
   {
     name: 'FlowLedgerPro',
-    description: 'Accounting and ERP product for business accounts, sales pipelines, inventory health, invoices, and payment workflows.',
+    description: 'An accounting and ERP product for business accounts, sales pipelines, inventory health, invoices, and payment workflows, built with Next.js, React.js, and Tailwind CSS.',
     stack: ['Next.js', 'React.js', 'Tailwind CSS'],
-    demo: null,
+    demo: 'https://flowledgerpro.com/',
     github: null,
     featured: false,
     slug: 'flow-ledgerpro',

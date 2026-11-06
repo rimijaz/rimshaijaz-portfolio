@@ -2,6 +2,9 @@ import { FaGithub, FaLinkedin } from 'react-icons/fa'
 import { Mail } from 'lucide-react'
 import { socialLinks } from '../data/socials'
 import { siteConfig } from '../data/siteConfig'
+import BackToTop from './BackToTop'
+import RILogo from './RILogo'
+import BrandLockup from './BrandLockup'
 
 const socialItems = [
   { key: 'github', href: socialLinks.github, label: 'GitHub', Icon: FaGithub },
@@ -11,11 +14,20 @@ const socialItems = [
 
 export default function Footer() {
   return (
-    <footer className="mt-28 border-t border-border pb-10 pt-8 font-mono text-xs text-muted">
-      <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-between">
+    <footer className="mt-20 border-t border-border pb-6 pt-6 font-mono text-xs text-muted sm:mt-24 sm:pt-7">
+      <div className="mb-5 flex justify-center sm:mb-4 sm:justify-end">
+        <BackToTop />
+      </div>
+      <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
+        <div className="footer-brand flex items-center gap-3">
+          <a href="#" aria-label={`${siteConfig.name} — back to top`} className="ri-logo-shell flex h-9 w-9 items-center justify-center text-accent transition-all hover:scale-105 hover:text-text">
+            <RILogo size="small" />
+          </a>
+          <BrandLockup variant="footer" />
+        </div>
         <div className="order-2 sm:order-1">
           {socialItems.length > 0 && (
-            <ul className="flex items-center gap-5">
+            <ul className="flex items-center gap-4">
               {socialItems.map(({ key, href, label, Icon }) => (
                 <li key={key}>
                   <a
@@ -23,7 +35,7 @@ export default function Footer() {
                     target={key === 'email' ? undefined : '_blank'}
                     rel={key === 'email' ? undefined : 'noreferrer noopener'}
                     aria-label={label}
-                    className="text-muted transition-colors hover:text-accent"
+                    className="social-link inline-flex rounded-md p-1.5 text-muted transition-all hover:-translate-y-0.5 hover:bg-accent-soft hover:text-accent hover:shadow-[0_8px_18px_rgba(var(--color-accent-rgb),0.14)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                   >
                     <Icon size={18} aria-hidden />
                   </a>
@@ -39,7 +51,7 @@ export default function Footer() {
 
         <div className="order-3">
           {siteConfig.resumeUrl ? (
-            <a href={siteConfig.resumeUrl} target="_blank" rel="noreferrer noopener" className="transition-colors hover:text-accent">
+              <a href={siteConfig.resumeUrl} target="_blank" rel="noreferrer noopener" className="social-text-link rounded-md px-2 py-1 transition-all hover:bg-accent-soft hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
               Resume
             </a>
           ) : (
