@@ -86,7 +86,7 @@ export default function Projects() {
           onClick={() => setShowMore((expanded) => !expanded)}
           whileHover={reduceMotion ? undefined : { y: -3 }}
           whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-          className="project-show-more"
+          className="project-show-more cursor-pointer"
         >
           <span>{showMore ? 'Show Less' : 'Show More Projects'}</span>
           <ArrowUpRight size={17} aria-hidden className={showMore ? 'rotate-[-90deg]' : ''} />

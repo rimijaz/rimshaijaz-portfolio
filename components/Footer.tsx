@@ -14,11 +14,9 @@ const socialItems = [
 
 export default function Footer() {
   return (
-    <footer className="mt-20 border-t border-border pb-6 pt-6 font-mono text-xs text-muted sm:mt-24 sm:pt-7">
-      <div className="mb-5 flex justify-center sm:mb-4 sm:justify-end">
-        <BackToTop />
-      </div>
-      <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
+    <footer className="mt-14 border-t border-border pb-5 pt-5 font-mono text-xs text-muted sm:mt-16 sm:pt-6">
+      <BackToTop />
+      <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-between sm:gap-5">
         <div className="footer-brand flex items-center gap-3">
           <a href="#" aria-label={`${siteConfig.name} — back to top`} className="ri-logo-shell flex h-9 w-9 items-center justify-center text-accent transition-all hover:scale-105 hover:text-text">
             <RILogo size="small" />
@@ -27,7 +25,7 @@ export default function Footer() {
         </div>
         <div className="order-2 sm:order-1">
           {socialItems.length > 0 && (
-            <ul className="flex items-center gap-4">
+            <ul className="flex items-center gap-3">
               {socialItems.map(({ key, href, label, Icon }) => (
                 <li key={key}>
                   <a

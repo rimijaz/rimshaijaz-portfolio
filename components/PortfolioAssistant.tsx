@@ -125,7 +125,8 @@ export default function PortfolioAssistant() {
     if (!drag.moved) return
     event.preventDefault()
     const rect = event.currentTarget.getBoundingClientRect()
-    setFloatingPosition(clampFloatingPosition(event.clientX - drag.offsetX, event.clientY - drag.offsetY, rect.width, rect.height))
+    const nextPosition = clampFloatingPosition(event.clientX - drag.offsetX, event.clientY - drag.offsetY, rect.width, rect.height)
+    setFloatingPosition(nextPosition)
   }
 
   const finishLauncherPointer = (event: ReactPointerEvent<HTMLButtonElement>) => {

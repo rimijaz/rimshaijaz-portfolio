@@ -1,5 +1,6 @@
 import './globals.css'
 import { ReactNode } from 'react'
+import type { Metadata } from 'next'
 import Navbar from '../components/Navbar'
 import SocialSidebar from '../components/SocialSidebar'
 import EmailSidebar from '../components/EmailSidebar'
@@ -11,27 +12,31 @@ import { socialLinks } from '../data/socials'
 
 const absoluteUrl = (path: string) => siteConfig.url ? new URL(path, siteConfig.url).toString() : path
 
-export const metadata = {
+const pageTitle = `${siteConfig.fullName} | ${siteConfig.title} & Frontend Developer`
+const pageDescription = 'Rimsha Ijaz is a Senior Software Engineer and Frontend Developer specializing in React.js, Next.js, TypeScript, and modern web development.'
+
+export const metadata: Metadata = {
   metadataBase: siteConfig.url ? new URL(siteConfig.url) : undefined,
-  title: `${siteConfig.name} | ${siteConfig.title}`,
-  description: siteConfig.description,
-  keywords: ['Senior Software Engineer', 'React.js', 'Next.js', 'Frontend Development', 'Web Development', 'Technical SEO'],
+  title: pageTitle,
+  description: pageDescription,
+  keywords: ['Rimsha Ijaz', 'Software Engineer', 'Frontend Developer', 'React.js', 'Next.js', 'TypeScript', 'Web Development'],
   alternates: siteConfig.url ? { canonical: siteConfig.url } : undefined,
   robots: { index: true, follow: true, 'max-image-preview': 'large' },
   openGraph: {
-    title: `${siteConfig.name} | ${siteConfig.title}`,
-    description: siteConfig.description,
+    title: pageTitle,
+    description: pageDescription,
     type: 'website',
     url: siteConfig.url || undefined,
-    siteName: `${siteConfig.name} Portfolio`,
+    siteName: `${siteConfig.fullName} Portfolio`,
     images: [{ url: absoluteUrl('/og-image.svg'), width: 1200, height: 630, alt: `${siteConfig.fullName} — ${siteConfig.title}` }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${siteConfig.name} | ${siteConfig.title}`,
-    description: siteConfig.description,
+    title: pageTitle,
+    description: pageDescription,
     images: [absoluteUrl('/og-image.svg')],
   },
+  icons: { icon: '/icon.svg' },
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -43,12 +48,24 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className="bg-bg text-text">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
           '@context': 'https://schema.org',
-          '@type': 'Person',
-          name: siteConfig.fullName,
-          jobTitle: siteConfig.title,
-          url: siteConfig.url || undefined,
-          image: absoluteUrl('/profile_image.png'),
-          sameAs: [socialLinks.github, socialLinks.linkedin].filter(Boolean),
+          '@graph': [
+            {
+              '@type': 'Person',
+              name: siteConfig.fullName,
+              jobTitle: siteConfig.title,
+              url: siteConfig.url || undefined,
+              image: absoluteUrl('/profile_image.png'),
+              sameAs: [socialLinks.github, socialLinks.linkedin].filter(Boolean),
+              knowsAbout: ['Frontend Development', 'React.js', 'Next.js', 'TypeScript', 'Web Development'],
+            },
+            {
+              '@type': 'WebSite',
+              name: `${siteConfig.fullName} Portfolio`,
+              description: pageDescription,
+              url: siteConfig.url || undefined,
+              inLanguage: 'en',
+            },
+          ],
         }) }} />
         <SplashScreen />
         <a
